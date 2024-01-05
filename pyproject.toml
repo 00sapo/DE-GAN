@@ -11,7 +11,7 @@ dependencies = [
   "opencv-python>=4.9.0.80",
   "fire>=0.5.0",
 ]
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }
 
@@ -19,6 +19,9 @@ license = { text = "MIT" }
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
+
+[tool.pdm]
+package-type = "library"
 
 [tool.pdm.build]
 includes = ["weights/*.h5", "src/degan/*.py"]
