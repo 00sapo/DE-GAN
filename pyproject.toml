@@ -1,17 +1,17 @@
 [project]
-name = "DEGAN"
+name = "degan"
 version = "0.1.0"
-description = "Any description"
+description = "DE-GAN made pip-installable, forked from official repo: https://github.com/dali92002/DE-GAN"
 authors = [
   { name = "Federico Simonetta", email = "22996003+00sapo@users.noreply.github.com" },
 ]
 dependencies = [
-    "tensorflow[and-cuda]>=2.12.0",
-    "numpy>=1.26.3",
-    "pillow>=10.2.0",
-    "opencv-python>=4.9.0.80",
+  "tensorflow[and-cuda]>=2.12.0",
+  "numpy>=1.26.3",
+  "pillow>=10.2.0",
+  "opencv-python>=4.9.0.80",
 ]
-requires-python = ">=3.10,<3.11"
+requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }
 
@@ -20,6 +20,4 @@ license = { text = "MIT" }
 package-type = "application"
 
 [tool.pdm.dev-dependencies]
-dev = [
-    "ipdb>=0.13.13",
-]
+dev = ["ipdb>=0.13.13"]
