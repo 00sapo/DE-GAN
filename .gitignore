@@ -163,3 +163,5 @@ cython_debug/
 weights/weights.zip
 tests/__init__.py
 src/de_gan/__init__.py
+laudaretest
+.python-version
