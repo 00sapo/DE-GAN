@@ -23,15 +23,31 @@ from degan import DEGAN
 
 # use the official weights distributed by the authors and provided within the pip package:
 model = DEGAN()
+model.binarize(image)
+# input images should be grayscale float-32 numpy arrays with values in range [0, 1]
+# You can use load_image and write_image for loading/writing to/from paths
+from degan import load_image, write_image
+
 # or use your own weights:
-model = DEGAN(bin_weights='path/to/binary/weights.h5', en_weights='path/to/deblur/weights.h5', rn_weights='path/to/unwatermark/weights.h5')
+model = DEGAN(bin_weights='path/to/binary/weights.h5', deb_weights='path/to/deblur/weights.h5', wat_weights='path/to/unwatermark/weights.h5')
 
+# the following loads the weights and run the inference:
 binarized_image = model.binarize(image)
-deblurred_image = model.deblur(image)
-removed_noise_image = model.unwatermark(image)
-
+# and now it won't reload the weights but runs the inference on the same model:
+binarized_image_2 = model.binarize(another_image)
+# or you can force the loading of weights when you need it:
+model.load_weights()
 # you can also instantiate only certain models:
-model = DEGAN(en_weights=None, rn_weights=None)
+model = DEGAN(deblurred_image=None, deb_weights=None)
+model.load_weights()
+
+# similar for deblur and unwatermark
+deblurred_image = model.deblur(image)
+watermark_removed_image = model.unwatermark(image)
+
+# you can also compute the PSNR metric:
+from degan import psnr
+psnr_value = psnr(image, binarized_image)
 ```
 
 For training custom weights, please refer to the [original repository](https://github.com/dali92002/DE-GAN).
@@ -40,9 +56,10 @@ For training custom weights, please refer to the [original repository](https://g
 
 **Note: for using as a CLI, consider installing via `pipx`**
 
-- Default weights: `degan binarize image.png`
-- Custom weights: `degan binarize image.png --bin_weights path/to/binary/weights.h5`
+- Default weights: `degan binarize ./out_dir/ image.png`
+- Custom weights: `degan binarize ./out_dir/ image.png --bin_weights path/to/binary/weights.h5`
 - Other subcommands: `degan deblur`, `degan unwatermark`
+- You can concatenate subcommands: `degan deblur binarize unwatermark ./out_dir/ image.png`
 - All options: `degan --help`
 
 ## Citation
@@ -56,9 +73,4 @@ journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
 title={DE-GAN: A Conditional Generative Adversarial Network for Document deblurment},
 year={2020},
 doi={10.1109/TPAMI.2020.3022406}}
-
-```
-
-```
-
 ```
