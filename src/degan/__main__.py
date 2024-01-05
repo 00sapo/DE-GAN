@@ -26,26 +26,29 @@ class DEGAN:
         self.bin_weights = bin_weights
         self.deb_weights = deb_weights
         self.wat_weights = wat_weights
+        self.binarizer = None
+        self.deblurrer = None
+        self.unwatermarker = None
 
     def load_weights(self):
         if self.bin_weights is None:
             self.binarizer = None
         else:
-            self.binarizer = self.model_instantiate(
+            self.binarizer = self._model_instantiate(
                 self.bin_weights, biggest_layer=1024
             )
 
         if self.deb_weights is None:
             self.deblurrer = None
         else:
-            self.deblurrer = self.model_instantiate(
+            self.deblurrer = self._model_instantiate(
                 self.deb_weights, biggest_layer=1024
             )
 
         if self.wat_weights is None:
             self.unwatermarker = None
         else:
-            self.unwatermarker = self.model_instantiate(
+            self.unwatermarker = self._model_instantiate(
                 self.wat_weights, biggest_layer=512
             )
 
@@ -89,38 +92,44 @@ class DEGAN:
 
     def binarize(self, img):
         if self.binarizer is None:
-            self.binarizer = self.model_instantiate(
+            self.binarizer = self._model_instantiate(
                 self.bin_weights, biggest_layer=1024
             )
         self._generator = self.binarizer
         img = self._generate(img)
+        img = (img > 0.5).astype(np.float32)
+        return img
 
     def deblur(self, img):
         if self.deblurrer is None:
-            self.deblurrer = self.model_instantiate(
+            self.deblurrer = self._model_instantiate(
                 self.deb_weights, biggest_layer=1024
             )
         self._generator = self.deblurrer
         img = self._generate(img)
+        return img
 
     def unwatermark(self, img):
         if self.unwatermarker is None:
-            self.unwatermarker = self.model_instantiate(
+            self.unwatermarker = self._model_instantiate(
                 self.wat_weights, biggest_layer=512
             )
         self._generator = self.unwatermarker
         img = self._generate(img)
+        return img
 
 
 class Main:
     def __init__(
-        self, out_dir, *in_images, bin_weights=None, deb_weights=None, wat_weights=None
+        self,
+        out_dir=None,
+        bin_weights=None,
+        deb_weights=None,
+        wat_weights=None,
     ):
-        self.out_dir = out_dir
-        self.in_images = []
-        self.in_paths = in_images
-        for img in in_images:
-            self.in_images.append(load_image(img))
+        if out_dir is None:
+            out_dir = Path(".")
+        self._out_dir = out_dir
 
         degan_kwargs = {}
         if bin_weights is not None:
@@ -129,27 +138,40 @@ class Main:
             degan_kwargs["deb_weights"] = deb_weights
         if wat_weights is not None:
             degan_kwargs["wat_weights"] = wat_weights
-        self.degan = DEGAN(**degan_kwargs)
+        self._degan = DEGAN(**degan_kwargs)
 
-    def binarize(self):
+    def __load(self, *in_images):
+        if not hasattr(self, "in_images"):
+            self.in_images = []
+            self.in_paths = in_images
+            for img in in_images:
+                self.in_images.append(load_image(img))
+
+    def binarize(self, *in_images):
+        """Binarize images"""
+        self.__load(*in_images)
         for i, img in enumerate(self.in_images):
-            img = self.degan.binarize(img)
-            new_name = Path(self.in_paths[i]).replace(".png", "_bin.png")
-            write_image(img, self.out_dir / new_name)
+            img = self._degan.binarize(img)
+            new_name = Path(self.in_paths[i]).name.replace(".png", "_bin.png")
+            write_image(img, self._out_dir / new_name)
             self.in_images[i] = img
 
-    def deblur(self):
+    def deblur(self, *in_images):
+        """Deblur images"""
+        self.__load(*in_images)
         for i, img in enumerate(self.in_images):
-            img = self.degan.deblur(img)
-            new_name = Path(self.in_paths[i]).replace(".png", "_deb.png")
-            write_image(img, self.out_dir / new_name)
+            img = self._degan.deblur(img)
+            new_name = Path(self.in_paths[i]).name.replace(".png", "_deb.png")
+            write_image(img, self._out_dir / new_name)
             self.in_images[i] = img
 
-    def unwatermark(self):
+    def unwatermark(self, *in_images):
+        """Unwatermark images"""
+        self.__load(*in_images)
         for i, img in enumerate(self.in_images):
-            img = self.degan.unwatermark(img)
-            new_name = Path(self.in_paths[i]).replace(".png", "_wat.png")
-            write_image(img, self.out_dir / new_name)
+            img = self._degan.unwatermark(img)
+            new_name = Path(self.in_paths[i]).name.replace(".png", "_wat.png")
+            write_image(img, self._out_dir / new_name)
             self.in_images[i] = img
 
 
@@ -160,10 +182,11 @@ def load_image(image_path):
 
 
 def write_image(image, image_path):
+    image_path = str(image_path)
     cv2.imwrite(image_path, (image * 255).astype(np.uint8))
 
 
 if __name__ == "__main__":
     import fire
 
-    fire.Fire(Main)
+    fire.Fire(Main, name="degan")

@@ -21,7 +21,7 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [tool.pdm.build]
-includes = ["weights/*.h5", "src/**/*.py"]
+includes = ["weights/*.h5", "src/degan/*.py"]
 
 [tool.pdm.dev-dependencies]
 dev = ["ipdb>=0.13.13"]

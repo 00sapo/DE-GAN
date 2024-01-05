@@ -56,11 +56,10 @@ For training custom weights, please refer to the [original repository](https://g
 
 **Note: for using as a CLI, consider installing via `pipx`**
 
-- Default weights: `degan binarize ./out_dir/ image.png`
-- Custom weights: `degan binarize ./out_dir/ image.png --bin_weights path/to/binary/weights.h5`
+- Default weights: `degan binarize image.png`
+- Custom weights: `degan binarize image.png --out_dir ./out_dir/ --bin_weights path/to/binary/weights.h5`
 - Other subcommands: `degan deblur`, `degan unwatermark`
-- You can concatenate subcommands: `degan deblur binarize unwatermark ./out_dir/ image.png`
-- All options: `degan --help`
+- All options: `degan --help`, `degan - --help`
 
 ## Citation
 
