@@ -37,7 +37,7 @@ class Main:
         for i, img in enumerate(self.in_images):
             img = self._degan.binarize(img)
             new_name = Path(self.in_paths[i]).name.replace(".png", "_bin.png")
-            write_image(img, self._out_dir / new_name)
+            write_image(img, Path(self._out_dir) / new_name)
             self.in_images[i] = img
 
     def deblur(self, *in_images):
@@ -46,7 +46,7 @@ class Main:
         for i, img in enumerate(self.in_images):
             img = self._degan.deblur(img)
             new_name = Path(self.in_paths[i]).name.replace(".png", "_deb.png")
-            write_image(img, self._out_dir / new_name)
+            write_image(img, Path(self._out_dir) / new_name)
             self.in_images[i] = img
 
     def unwatermark(self, *in_images):
@@ -55,7 +55,7 @@ class Main:
         for i, img in enumerate(self.in_images):
             img = self._degan.unwatermark(img)
             new_name = Path(self.in_paths[i]).name.replace(".png", "_wat.png")
-            write_image(img, self._out_dir / new_name)
+            write_image(img, Path(self._out_dir) / new_name)
             self.in_images[i] = img
 
 
