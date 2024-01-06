@@ -5,16 +5,13 @@ description = "DE-GAN made pip-installable, forked from official repo: https://g
 authors = [
   { name = "Federico Simonetta", email = "22996003+00sapo@users.noreply.github.com" },
 ]
-dependencies = [
-  "tensorflow[and-cuda]>=2.12.0",
-  "numpy>=1.26.3",
-  "opencv-python>=4.9.0.80",
-  "fire>=0.5.0",
-]
-requires-python = ">=3.10"
+dependencies = ["tensorflow[and-cuda]", "opencv-python", "fire"]
+requires-python = ">=3.8,<3.12" # tensorflow not ready for 3.12 yet (tensorrt actually works up 3.11, but we cannot exclude it)
 readme = "README.md"
 license = { text = "MIT" }
 
+[project.scripts]
+degan = "degan.cli:main"
 
 [build-system]
 requires = ["pdm-backend"]
@@ -24,7 +21,7 @@ build-backend = "pdm.backend"
 package-type = "library"
 
 [tool.pdm.build]
-includes = ["weights/*.h5", "src/degan/*.py"]
+includes = ["src/degan/"]
 
 [tool.pdm.dev-dependencies]
 dev = ["ipdb>=0.13.13"]
