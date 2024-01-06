@@ -8,9 +8,9 @@ post-processing the images is recommended for optimizing the results to your use
 
 ## Installation
 
-`pip install https://github.com/00sapo/degan/releases/download/v0.1/degan-0.1.0-py3-none-any.whl`
+`pip install https://github.com/00sapo/degan/releases/download/v0.1.1/degan-0.1.1-py3-none-any.whl`
 
-For CLI usage, I recommend using `pipx`: `pipx install https://github.com/00sapo/degan/releases/download/v0.1/degan-0.1.0-py3-none-any.whl`
+For CLI usage, I recommend using `pipx`: `pipx install https://github.com/00sapo/degan/releases/download/v0.1.1/degan-0.1.1-py3-none-any.whl`
 
 For installing `pipx`, please refer to the [official documentation](https://pipx.pypa.io/stable/).
 
