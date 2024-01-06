@@ -14,6 +14,8 @@ For CLI usage, I recommend using `pipx`: `pipx install git+https://githib.com/00
 
 For installing `pipx`, please refer to the [official documentation](https://pipx.pypa.io/stable/).
 
+Requires Python >=3.8, <3.11. Python 3.10 is recommended.
+
 ## Usage
 
 ### API
