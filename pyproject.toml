@@ -1,6 +1,6 @@
 [project]
 name = "degan"
-version = "0.1.0"
+version = "0.1.1"
 description = "DE-GAN made pip-installable, forked from official repo: https://github.com/dali92002/DE-GAN"
 authors = [
   { name = "Federico Simonetta", email = "22996003+00sapo@users.noreply.github.com" },
