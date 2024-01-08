@@ -40,7 +40,7 @@ binarized_image_2 = model.binarize(another_image)
 # or you can force the loading of weights when you need it:
 model.load_weights()
 # you can also instantiate only certain models:
-model = DEGAN(deblurred_image=None, deb_weights=None)
+model = DEGAN(deb_weights=None, wat_weights=None)
 model.load_weights()
 
 # similar for deblur and unwatermark
