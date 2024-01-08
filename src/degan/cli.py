@@ -29,34 +29,49 @@ class Main:
             self.in_images = []
             self.in_paths = in_images
             for img in in_images:
+                print("Loading", img)
                 self.in_images.append(load_image(img))
 
+    def process_images(self, process_type, *in_images):
+        """Process images according to the given process_type"""
+        if process_type not in ["binarize", "deblur", "unwatermark"]:
+            raise ValueError("Unsupported process type: {}".format(process_type))
+
+        self.__load(*in_images)
+        suffix_map = {
+            "binarize": ".bin.png",
+            "deblur": ".deb.png",
+            "unwatermark": ".wat.png",
+        }
+
+        for i, img in enumerate(self.in_images):
+            print(process_type.capitalize(), self.in_paths[i])
+
+            # Dynamically call the appropriate method from _degan object
+            process_method = getattr(self._degan, process_type)
+            img = process_method(img)
+
+            new_path = (
+                Path(self.in_paths[i])
+                .with_suffix(suffix_map[process_type])
+                .relative_to(self._out_dir)
+            )
+            print("Writing", new_path)
+            write_image(img, new_path)
+            self.in_images[i] = img
+
+    # The methods below now call the new generic process_images method with the appropriate process_type
     def binarize(self, *in_images):
         """Binarize images"""
-        self.__load(*in_images)
-        for i, img in enumerate(self.in_images):
-            img = self._degan.binarize(img)
-            new_name = Path(self.in_paths[i]).name.replace(".png", "_bin.png")
-            write_image(img, Path(self._out_dir) / new_name)
-            self.in_images[i] = img
+        self.process_images("binarize", *in_images)
 
     def deblur(self, *in_images):
         """Deblur images"""
-        self.__load(*in_images)
-        for i, img in enumerate(self.in_images):
-            img = self._degan.deblur(img)
-            new_name = Path(self.in_paths[i]).name.replace(".png", "_deb.png")
-            write_image(img, Path(self._out_dir) / new_name)
-            self.in_images[i] = img
+        self.process_images("deblur", *in_images)
 
     def unwatermark(self, *in_images):
         """Unwatermark images"""
-        self.__load(*in_images)
-        for i, img in enumerate(self.in_images):
-            img = self._degan.unwatermark(img)
-            new_name = Path(self.in_paths[i]).name.replace(".png", "_wat.png")
-            write_image(img, Path(self._out_dir) / new_name)
-            self.in_images[i] = img
+        self.process_images("unwatermark", *in_images)
 
 
 def main():

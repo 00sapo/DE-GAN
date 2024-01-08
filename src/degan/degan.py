@@ -73,7 +73,9 @@ class DEGAN:
         predicted_list = []
         for pred in range(in_image_p.shape[0]):
             predicted_list.append(
-                self._generator.predict(in_image_p[pred].reshape(1, 256, 256, 1))
+                self._generator.predict(
+                    in_image_p[pred].reshape(1, 256, 256, 1), verbose=0
+                )
             )
         predicted_image = np.array(predicted_list)  # .reshape()
         return predicted_image
