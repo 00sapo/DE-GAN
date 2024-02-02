@@ -72,6 +72,7 @@ class DEGAN:
     def _predict(self, in_image_p):
         predicted_list = []
         for pred in range(in_image_p.shape[0]):
+            # FIX: the next line takes a lot of memory
             predicted_list.append(
                 self._generator.predict(
                     in_image_p[pred].reshape(1, 256, 256, 1), verbose=0
